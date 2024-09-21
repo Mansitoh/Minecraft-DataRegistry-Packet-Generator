@@ -59,4 +59,4 @@ if __name__ == "__main__":
     print("Packet Created Successfully!")
     print(" ")
     print(packet)
-    builder.save_to_file("1.21-registry/created-packets/biome-registry-packet-1.21.dat")
+    builder.save_to_file("1.21-registry/created-packets/biome-registry-packet-1.21.data")
