@@ -5,7 +5,7 @@
 Clone the repository to your local environment:
 
 ```bash
-git clone https://github.com/yourusername/Minecraft-DataRegistry-Packet-Generator.git
+git clone https://github.com/Mansitoh/Minecraft-DataRegistry-Packet-Generator.git
 ```
 
 Alternatively, you can simply download the registry packet you need.😁
