@@ -1,15 +1,15 @@
 use std::fs;
-use crab_nbt::nbt;
+use crab_nbt::{nbt, NbtTag};
 use serde_json::{self, json, Value};
 
 use crate::PacketBuilder;
 
-pub fn generate_default_trim_material() {
-    let registry_type = "trim_material";
+pub fn generate_default_chat_type() {
+    let registry_type = "chat_type";
     let data_dir_path = "../Registries/1.21-Registry/extracted-from-jar/".to_owned()+registry_type;
     let packets_dir = "../Registries/1.21-Registry/created-packets/".to_string()+registry_type;
     let jsons_dir = "../Registries/1.21-Registry/jsons-created/".to_string()+registry_type;
-    println!("\nTrim Material Data Registry");
+    println!("\nChatType Data Registry");
     println!("Generating default `{}` data registry...", registry_type);
     
     let mut packet = PacketBuilder::new(0x07);
@@ -44,29 +44,25 @@ pub fn generate_default_trim_material() {
             println!("      Adding data to entry");
             packet.write_boolean(true);
 
-            let asset_name = json["asset_name"].as_str().unwrap();
-            let ingredient = json["ingredient"].as_str().unwrap();
-            let item_model_index = json["item_model_index"].as_f64().unwrap() as f32;
-            let description_color = json["description"]["color"].as_str().unwrap();
-            let description_translate = json["description"]["translate"].as_str().unwrap();
-
+            let chat_tanslate = json["chat"]["translation_key"].as_str().unwrap();
+            let chat_parameters: Vec<String> = json["chat"]["parameters"].as_array().unwrap().iter().map(|v| v.as_str().unwrap().to_string()).collect();
+            let narration_tanslate = json["narration"]["translation_key"].as_str().unwrap();
+            let narration_parameters: Vec<String> = json["narration"]["parameters"].as_array().unwrap().iter().map(|v| v.as_str().unwrap().to_string()).collect();
             let nbt = generate_nbt(
                 name.clone(),
-                asset_name.to_string(),
-                ingredient.to_string(),
-                item_model_index,
-                description_color.to_string(),
-                description_translate.to_string(),
+                chat_tanslate.to_string(),
+                chat_parameters.clone(),
+                narration_tanslate.to_string(),
+                narration_parameters.clone()
             );
 
             add_entry(
                 &mut object,
                 &("minecraft:".to_string() + &name),
-                asset_name.to_string(),
-                ingredient.to_string(),
-                item_model_index,
-                description_color.to_string(),
-                description_translate.to_string(),
+                chat_tanslate.to_string(),
+                chat_parameters,
+                narration_tanslate.to_string(),
+                narration_parameters
             );
 
             println!("      Writing NBT data...");
@@ -85,19 +81,21 @@ pub fn generate_default_trim_material() {
 
 pub fn generate_nbt(
     nbt_name: String,
-    asset_name: String,
-    ingredient: String,
-    item_model_index: f32,
-    description_color: String,
-    description_translate: String,
+    chat_tanslate: String,
+    chat_parameters: Vec<String>,
+    narration_tanslate: String,
+    narration_parameters: Vec<String>
 ) -> crab_nbt::Nbt {
+    let chat_parameters_tag: Vec<NbtTag> = chat_parameters.iter().map(|p| NbtTag::String(p.clone())).collect();
+    let narration_parameters_tag: Vec<NbtTag> = narration_parameters.iter().map(|p| NbtTag::String(p.clone())).collect();
     let nbt = nbt!(nbt_name, {
-        "asset_name": asset_name,
-        "ingredient": ingredient,
-        "item_model_index": item_model_index,
-        "description": {
-            "color": description_color,
-            "translate": description_translate,
+        "chat": {
+            "translation_key": chat_tanslate,
+            "parameters": chat_parameters_tag
+        },
+        "narration": {
+            "translation_key": narration_tanslate,
+            "parameters": narration_parameters_tag
         }
     });
     nbt
@@ -106,19 +104,19 @@ pub fn generate_nbt(
 fn add_entry(
     object: &mut serde_json::Map<String, Value>, 
     identifier: &str,
-    asset_name: String,
-    ingredient: String,
-    item_model_index: f32,
-    description_color: String,
-    description_translate: String,
+    chat_tanslate: String,
+    chat_parameters: Vec<String>,
+    narration_tanslate: String,
+    narration_parameters: Vec<String>
 ) {
     let entry = json!({
-        "asset_name": asset_name,
-        "ingredient": ingredient,
-        "item_model_index": item_model_index,
-        "description": {
-            "color": description_color,
-            "translate": description_translate,
+        "chat": {
+            "translation_key": chat_tanslate,
+            "parameters": chat_parameters
+        },
+        "narration": {
+            "translation_key": narration_tanslate,
+            "parameters": narration_parameters
         }
     });
     object.insert(identifier.to_string(), entry);

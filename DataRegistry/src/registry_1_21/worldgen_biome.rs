@@ -1,15 +1,15 @@
 use std::fs;
-use crab_nbt::nbt;
+use crab_nbt::{nbt, NbtCompound, NbtTag};
 use serde_json::{self, json, Value};
 
 use crate::PacketBuilder;
 
-pub fn generate_default_trim_material() {
-    let registry_type = "trim_material";
+pub fn generate_default_worldgen_biome() {
+    let registry_type = "worldgen/biome";
     let data_dir_path = "../Registries/1.21-Registry/extracted-from-jar/".to_owned()+registry_type;
     let packets_dir = "../Registries/1.21-Registry/created-packets/".to_string()+registry_type;
     let jsons_dir = "../Registries/1.21-Registry/jsons-created/".to_string()+registry_type;
-    println!("\nTrim Material Data Registry");
+    println!("\nWorldGen Biome Data Registry");
     println!("Generating default `{}` data registry...", registry_type);
     
     let mut packet = PacketBuilder::new(0x07);
@@ -27,7 +27,6 @@ pub fn generate_default_trim_material() {
     let mut registry_json = json!({
         "minecraft:".to_owned()+registry_type: {} 
     });
-
     let mut object = registry_json["minecraft:".to_owned()+registry_type].as_object_mut().unwrap();
 
     for entry in fs::read_dir(data_dir_path).unwrap() {
@@ -44,29 +43,27 @@ pub fn generate_default_trim_material() {
             println!("      Adding data to entry");
             packet.write_boolean(true);
 
-            let asset_name = json["asset_name"].as_str().unwrap();
-            let ingredient = json["ingredient"].as_str().unwrap();
-            let item_model_index = json["item_model_index"].as_f64().unwrap() as f32;
-            let description_color = json["description"]["color"].as_str().unwrap();
-            let description_translate = json["description"]["translate"].as_str().unwrap();
+            let has_precipitation = json["has_precipitation"].as_bool().unwrap();
+            let temperature = json["temperature"].as_f64().unwrap() as f32;
+            let downfall = json["downfall"].as_f64().unwrap() as f32;
+            let effects = json["effects"].clone();
 
             let nbt = generate_nbt(
                 name.clone(),
-                asset_name.to_string(),
-                ingredient.to_string(),
-                item_model_index,
-                description_color.to_string(),
-                description_translate.to_string(),
+                has_precipitation,
+                temperature,
+                downfall,
+                effects.clone(), // Clone the effects value here
             );
 
             add_entry(
                 &mut object,
                 &("minecraft:".to_string() + &name),
-                asset_name.to_string(),
-                ingredient.to_string(),
-                item_model_index,
-                description_color.to_string(),
-                description_translate.to_string(),
+                has_precipitation,
+                temperature,
+                downfall,
+                effects,
+                
             );
 
             println!("      Writing NBT data...");
@@ -85,41 +82,54 @@ pub fn generate_default_trim_material() {
 
 pub fn generate_nbt(
     nbt_name: String,
-    asset_name: String,
-    ingredient: String,
-    item_model_index: f32,
-    description_color: String,
-    description_translate: String,
+    has_precipitation: bool,
+    temperature: f32,
+    downfall: f32,
+    effects: Value, 
 ) -> crab_nbt::Nbt {
-    let nbt = nbt!(nbt_name, {
-        "asset_name": asset_name,
-        "ingredient": ingredient,
-        "item_model_index": item_model_index,
-        "description": {
-            "color": description_color,
-            "translate": description_translate,
+    let effects_nbt = if effects.is_object() {
+        let mut compound = NbtCompound::new();
+        for (key, value) in effects.as_object().unwrap() {
+            let tag = match value {
+                Value::Bool(b) => NbtTag::from(*b),
+                Value::Number(n) => {
+                    if let Some(i) = n.as_i64() {
+                        NbtTag::from(i)
+                    } else {
+                        NbtTag::from(n.as_f64().unwrap_or(0.0))
+                    }
+                }
+                Value::String(s) => NbtTag::from(s.as_str()),
+                _ => continue,
+            };
+            compound.child_tags.insert(key.clone(), tag);
         }
+        NbtTag::Compound(compound)
+    } else {
+        NbtTag::Compound(NbtCompound::new()) 
+    };
+
+    let nbt = nbt!(nbt_name, {
+        "has_precipitation": has_precipitation,
+        "temperature": temperature,
+        "downfall": downfall,
+        "effects": effects_nbt,
     });
     nbt
 }
-
 fn add_entry(
     object: &mut serde_json::Map<String, Value>, 
     identifier: &str,
-    asset_name: String,
-    ingredient: String,
-    item_model_index: f32,
-    description_color: String,
-    description_translate: String,
+    has_precipitation: bool,
+    temperature: f32,
+    downfall: f32,
+    effects: serde_json::Value,
 ) {
     let entry = json!({
-        "asset_name": asset_name,
-        "ingredient": ingredient,
-        "item_model_index": item_model_index,
-        "description": {
-            "color": description_color,
-            "translate": description_translate,
-        }
+        "has_precipitation": has_precipitation,
+        "temperature": temperature,
+        "downfall": downfall,
+        "effects": effects,
     });
     object.insert(identifier.to_string(), entry);
 }

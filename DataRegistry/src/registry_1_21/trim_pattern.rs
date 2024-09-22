@@ -4,12 +4,12 @@ use serde_json::{self, json, Value};
 
 use crate::PacketBuilder;
 
-pub fn generate_default_trim_material() {
-    let registry_type = "trim_material";
+pub fn generate_default_trim_pattern() {
+    let registry_type = "trim_pattern";
     let data_dir_path = "../Registries/1.21-Registry/extracted-from-jar/".to_owned()+registry_type;
     let packets_dir = "../Registries/1.21-Registry/created-packets/".to_string()+registry_type;
     let jsons_dir = "../Registries/1.21-Registry/jsons-created/".to_string()+registry_type;
-    println!("\nTrim Material Data Registry");
+    println!("\nTrim Pattern Data Registry");
     println!("Generating default `{}` data registry...", registry_type);
     
     let mut packet = PacketBuilder::new(0x07);
@@ -44,29 +44,23 @@ pub fn generate_default_trim_material() {
             println!("      Adding data to entry");
             packet.write_boolean(true);
 
-            let asset_name = json["asset_name"].as_str().unwrap();
-            let ingredient = json["ingredient"].as_str().unwrap();
-            let item_model_index = json["item_model_index"].as_f64().unwrap() as f32;
-            let description_color = json["description"]["color"].as_str().unwrap();
+            let asset_id = json["asset_id"].as_str().unwrap();
+            let template_item = json["template_item"].as_str().unwrap();
             let description_translate = json["description"]["translate"].as_str().unwrap();
 
             let nbt = generate_nbt(
                 name.clone(),
-                asset_name.to_string(),
-                ingredient.to_string(),
-                item_model_index,
-                description_color.to_string(),
-                description_translate.to_string(),
+                asset_id.to_string(),
+                template_item.to_string(),
+                description_translate.to_string()
             );
 
             add_entry(
                 &mut object,
                 &("minecraft:".to_string() + &name),
-                asset_name.to_string(),
-                ingredient.to_string(),
-                item_model_index,
-                description_color.to_string(),
-                description_translate.to_string(),
+                asset_id.to_string(),
+                template_item.to_string(),
+                description_translate.to_string()
             );
 
             println!("      Writing NBT data...");
@@ -85,18 +79,14 @@ pub fn generate_default_trim_material() {
 
 pub fn generate_nbt(
     nbt_name: String,
-    asset_name: String,
-    ingredient: String,
-    item_model_index: f32,
-    description_color: String,
-    description_translate: String,
+    asset_id: String,
+    template_item: String,
+    description_translate: String
 ) -> crab_nbt::Nbt {
     let nbt = nbt!(nbt_name, {
-        "asset_name": asset_name,
-        "ingredient": ingredient,
-        "item_model_index": item_model_index,
+        "asset_id": asset_id,
+        "template_item": template_item,
         "description": {
-            "color": description_color,
             "translate": description_translate,
         }
     });
@@ -106,18 +96,14 @@ pub fn generate_nbt(
 fn add_entry(
     object: &mut serde_json::Map<String, Value>, 
     identifier: &str,
-    asset_name: String,
-    ingredient: String,
-    item_model_index: f32,
-    description_color: String,
-    description_translate: String,
+    asset_id: String,
+    template_item: String,
+    description_translate: String
 ) {
     let entry = json!({
-        "asset_name": asset_name,
-        "ingredient": ingredient,
-        "item_model_index": item_model_index,
+        "asset_id": asset_id,
+        "template_item": template_item,
         "description": {
-            "color": description_color,
             "translate": description_translate,
         }
     });
