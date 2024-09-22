@@ -1,1 +1,6 @@
 /__pycache__
+/DataRegistry/target
+/DataRegistry/Cargo.lock
+/DataRegistry/.vscode
+/DataRegistry/.idea
+/.vscode
