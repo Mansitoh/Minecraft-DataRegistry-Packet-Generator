@@ -1,5 +1,9 @@
 
 
+use std::fs;
+
+use serde_json::json;
+
 use crate::registry_1_21::banner_pattern::generate_default_banner_pattern;
 use crate::registry_1_21::chat_type::generate_default_chat_type;
 use crate::registry_1_21::damage_type::generate_default_damage_type;
@@ -9,7 +13,7 @@ use crate::registry_1_21::trim_material::generate_default_trim_material;
 use crate::registry_1_21::trim_pattern::generate_default_trim_pattern;
 use crate::registry_1_21::wolf_variant::generate_default_wolf_variant;
 use crate::registry_1_21::worldgen_biome::generate_default_worldgen_biome;
-use crate::utils::generate_input;
+use crate::utils::{generate_input, read_json_files_from_path};
 
 pub fn create_data_registry(){
     //clear console
@@ -185,6 +189,33 @@ pub fn create_data_registry(){
     
     println!("DataRegistry generator finished.");
     println!("Thank you for using the DataRegistry generator for Minecraft 1.21.");
+    //for each json file in jsons-created folder, create a single json file with all the jsons
+    let mut registry_json = json!({});
+    for entry in fs::read_dir("Registries/1.21-Registry/jsons-created/").unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        
+        if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("json") {
+            let content = fs::read_to_string(&path).unwrap();
+            let json: serde_json::Value = serde_json::from_str(&content).unwrap();
+            //add json to registry_json
+            registry_json.as_object_mut().unwrap().extend(json.as_object().unwrap().clone());
+        }
+    }
+    for entry in fs::read_dir("Registries/1.21-Registry/jsons-created/worldgen").unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        
+        if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("json") {
+            let content = fs::read_to_string(&path).unwrap();
+            let json: serde_json::Value = serde_json::from_str(&content).unwrap();
+            //add json to registry_json
+            registry_json.as_object_mut().unwrap().extend(json.as_object().unwrap().clone());
+        }
+    }
+    //write registry_json to a single json file
+    let registry_json_str = serde_json::to_string_pretty(&registry_json).unwrap();
+    fs::write("Registries/1.21-Registry/jsons-created/registry.json", registry_json_str).unwrap();
 }
 
 
