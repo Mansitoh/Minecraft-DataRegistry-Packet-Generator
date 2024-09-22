@@ -8,3 +8,4 @@ bytes = "1.0"
 uuid = "1.0"
 tokio = { version = "1.0", features = ["full"] }
 crab_nbt = "0.2.3"
+serde_json = "1.0"

@@ -126,8 +126,6 @@ impl PacketBuilder {
         
         // Luego añadimos el contenido del paquete (packet_id y datos)
         packet.extend_from_slice(&packet_data);
-        
-        println!("Packet with protocol builder: {:?}", packet);
         packet
     }
     
