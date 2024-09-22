@@ -106,4 +106,4 @@ class PacketBuilder:
     def save_to_file(self, filename: str):
         """Guarda el contenido del buffer en un archivo binario."""
         with open(filename, 'wb') as file:
-            file.write(self.buffer)
+            file.write(self.build())
