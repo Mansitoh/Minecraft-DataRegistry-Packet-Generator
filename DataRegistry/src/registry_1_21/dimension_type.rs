@@ -48,6 +48,7 @@ pub fn generate_default_dimension_type() {
             let has_skylight = if json["has_skylight"].as_bool().unwrap(){ 1 } else { 0 };
             let has_ceiling = if json["has_ceiling"].as_bool().unwrap(){ 1 } else { 0 };
             let ultrawarm = if json["ultrawarm"].as_bool().unwrap() { 1 } else { 0 };
+            let natural = if json["natural"].as_bool().unwrap() { 1 } else { 0 };
             let coordinate_scale = json["coordinate_scale"].as_f64().unwrap();
             let bed_works =if json["bed_works"].as_bool().unwrap(){ 1 } else { 0 };
             let respan_anchor_works = if json["respawn_anchor_works"].as_bool().unwrap(){ 1 } else { 0 };
@@ -70,6 +71,7 @@ pub fn generate_default_dimension_type() {
                 has_skylight ,
                 has_ceiling,
                 ultrawarm,
+                natural,
                 coordinate_scale,
                 bed_works,
                 respan_anchor_works,
@@ -93,6 +95,7 @@ pub fn generate_default_dimension_type() {
                 has_skylight,
                 has_ceiling,
                 ultrawarm,
+                natural,
                 coordinate_scale,
                 bed_works,
                 respan_anchor_works,
@@ -129,6 +132,7 @@ pub fn generate_nbt(
     has_skylight: i8,
     has_ceiling: i8,
     ultrawarm: i8,
+    natural: i8,
     coordinate_scale: f64,
     bed_works: i8,
     respan_anchor_works: i8,
@@ -149,6 +153,7 @@ pub fn generate_nbt(
         "has_skylight": has_skylight,
         "has_ceiling": has_ceiling,
         "ultrawarm": ultrawarm,
+        "natural": natural,
         "coordinate_scale": coordinate_scale,
         "bed_works": bed_works,
         "respawn_anchor_works": respan_anchor_works,
@@ -173,10 +178,10 @@ pub fn generate_nbt(
 fn add_entry(
     object: &mut serde_json::Map<String, Value>, 
     identifier: &str,
-
     has_skylight: i8,
     has_ceiling: i8,
     ultrawarm: i8,
+    natural: i8,
     coordinate_scale: f64,
     bed_works: i8,
     respan_anchor_works: i8,
@@ -197,6 +202,7 @@ fn add_entry(
         "has_skylight": has_skylight,
         "has_ceiling": has_ceiling,
         "ultrawarm": ultrawarm,
+        "natural": natural,
         "coordinate_scale": coordinate_scale,
         "bed_works": bed_works,
         "respawn_anchor_works": respan_anchor_works,

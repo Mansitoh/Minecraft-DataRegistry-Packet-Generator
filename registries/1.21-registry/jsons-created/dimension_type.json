@@ -2,12 +2,12 @@
   "minecraft:dimension_type": {
     "minecraft:overworld": {
       "ambient_light": 0.0,
-      "bed_works": true,
+      "bed_works": 1,
       "coordinate_scale": 1.0,
       "effects": "minecraft:overworld",
-      "has_ceiling": false,
-      "has_raids": true,
-      "has_skylight": true,
+      "has_ceiling": 0,
+      "has_raids": 1,
+      "has_skylight": 1,
       "height": 384,
       "infiniburn": "#minecraft:infiniburn_overworld",
       "logical_height": 384,
@@ -18,18 +18,19 @@
         "min_inclusive": 0,
         "type": "minecraft:uniform"
       },
-      "piglin_safe": false,
-      "respawn_anchor_works": false,
-      "ultrawarm": false
+      "natural": 1,
+      "piglin_safe": 0,
+      "respawn_anchor_works": 0,
+      "ultrawarm": 0
     },
     "minecraft:overworld_caves": {
       "ambient_light": 0.0,
-      "bed_works": true,
+      "bed_works": 1,
       "coordinate_scale": 1.0,
       "effects": "minecraft:overworld",
-      "has_ceiling": true,
-      "has_raids": true,
-      "has_skylight": true,
+      "has_ceiling": 1,
+      "has_raids": 1,
+      "has_skylight": 1,
       "height": 384,
       "infiniburn": "#minecraft:infiniburn_overworld",
       "logical_height": 384,
@@ -40,18 +41,19 @@
         "min_inclusive": 0,
         "type": "minecraft:uniform"
       },
-      "piglin_safe": false,
-      "respawn_anchor_works": false,
-      "ultrawarm": false
+      "natural": 1,
+      "piglin_safe": 0,
+      "respawn_anchor_works": 0,
+      "ultrawarm": 0
     },
     "minecraft:the_end": {
       "ambient_light": 0.0,
-      "bed_works": false,
+      "bed_works": 0,
       "coordinate_scale": 1.0,
       "effects": "minecraft:the_end",
-      "has_ceiling": false,
-      "has_raids": true,
-      "has_skylight": false,
+      "has_ceiling": 0,
+      "has_raids": 1,
+      "has_skylight": 0,
       "height": 256,
       "infiniburn": "#minecraft:infiniburn_end",
       "logical_height": 256,
@@ -62,18 +64,19 @@
         "min_inclusive": 0,
         "type": "minecraft:uniform"
       },
-      "piglin_safe": false,
-      "respawn_anchor_works": false,
-      "ultrawarm": false
+      "natural": 0,
+      "piglin_safe": 0,
+      "respawn_anchor_works": 0,
+      "ultrawarm": 0
     },
     "minecraft:the_nether": {
       "ambient_light": 0.10000000149011612,
-      "bed_works": false,
+      "bed_works": 0,
       "coordinate_scale": 8.0,
       "effects": "minecraft:the_nether",
-      "has_ceiling": true,
-      "has_raids": false,
-      "has_skylight": false,
+      "has_ceiling": 1,
+      "has_raids": 0,
+      "has_skylight": 0,
       "height": 256,
       "infiniburn": "#minecraft:infiniburn_nether",
       "logical_height": 128,
@@ -84,9 +87,10 @@
         "min_inclusive": 7,
         "type": "minecraft:uniform"
       },
-      "piglin_safe": true,
-      "respawn_anchor_works": true,
-      "ultrawarm": true
+      "natural": 0,
+      "piglin_safe": 1,
+      "respawn_anchor_works": 1,
+      "ultrawarm": 1
     }
   }
 }
