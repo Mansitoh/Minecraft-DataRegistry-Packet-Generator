@@ -47,6 +47,7 @@ pub fn generate_default_trim_pattern() {
             let asset_id = json["asset_id"].as_str().unwrap();
             let template_item = json["template_item"].as_str().unwrap();
             let description_translate = json["description"]["translate"].as_str().unwrap();
+            
 
             let nbt = generate_nbt(
                 name.clone(),
