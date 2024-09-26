@@ -8,4 +8,4 @@ Clone the repository to your local environment:
 git clone https://github.com/Mansitoh/Minecraft-DataRegistry-Packet-Generator.git
 ```
 
-## Alternatively, you can simply download the registry packet you need.😁<br>The packets are uncompressed, they already have their length and packet ID. You just need to extract the bytearray from the file and use it in your code
+## Alternatively, you can simply download the registry packet you need.😁,<br>They are in the `registries/<version>/created-packets` folder.<br>The packets are uncompressed, they already have their length and packet ID. You just need to extract the bytearray from the file and use it in your code
